@@ -29,13 +29,13 @@ export class UsersController {
     getAutoSuggestUsers = (request: express.Request, response: express.Response): void => {
         const { loginSubstring, limit } = request.query;
         const users: User[] = UsersService.getAutoSuggestUsers(loginSubstring, limit);
-        response.json(users);
+        response.json({ users });
     };
 
     getUserById = (request: express.Request, response: express.Response): void => {
         const { id } = request.params;
         const user: User = UsersService.getUserById(id);
-        response.json(user);
+        response.json({ user });
     };
 
     updateUser = (request: express.Request, response: express.Response): void => {
