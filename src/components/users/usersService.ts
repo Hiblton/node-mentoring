@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+
 import { users, User } from './';
 
 export class UsersService {
@@ -18,29 +19,33 @@ export class UsersService {
         return users.find(user => user.id === id);
     }
 
-    public static createUser(user: User): boolean {
-        if (!user) {
+    public static createUser(newUser: User): boolean {
+        if (!newUser) {
             return false;
         }
 
         users.push({
-            ...user,
+            ...newUser,
             id: uuidv4(),
         });
 
         return true;
     }
 
-    public static updateUser(id: string, updatedUser: User): boolean {
-        if (!id || !updatedUser) {
+    public static updateUser(id: string, updatedProps: User): boolean {
+        if (!id || !updatedProps) {
             return false;
         }
 
-        users.map(user => {
-            if (user.id === id) {
-                return updatedUser;
+        for (const index in users) {
+            if (users[index].id === id) {
+                users[index] = {
+                    ...users[index],
+                    ...updatedProps,
+                };
+                break;
             }
-        });
+        }
 
         return true;
     }
@@ -50,11 +55,12 @@ export class UsersService {
             return false;
         }
 
-        users.map(user => {
-            if (user.id === id) {
-                user.isDeleted = true;
+        for (const index in users) {
+            if (users[index].id === id) {
+                users[index].isDeleted = true;
+                break;
             }
-        });
+        }
 
         return true;
     }
