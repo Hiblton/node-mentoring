@@ -1,12 +1,6 @@
-import * as express from 'express';
+import { App } from './app';
+import { UsersController } from './components/users';
 
-const app = express();
+const app = new App([new UsersController()], 5000);
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running in http://localhost:${PORT}`);
-});
+app.listen();
