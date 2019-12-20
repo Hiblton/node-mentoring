@@ -9,3 +9,6 @@ export { users } from './usersStorage';
 
 // define User service to manipulate with data
 export { UsersService } from './usersService';
+
+// define User validation schemas to validate requests
+export { createUserSchema, updateUserSchema } from './usersValidationSchema';

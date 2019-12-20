@@ -8,7 +8,7 @@ export class UsersService {
             return [];
         }
 
-        return users.filter(user => user.login.includes(login)).slice(0, +limit);
+        return users.filter(user => user.login.includes(login) && !user.isDeleted).slice(0, +limit);
     }
 
     public static getUserById(id: string): User {
@@ -16,52 +16,59 @@ export class UsersService {
             return null;
         }
 
-        return users.find(user => user.id === id);
+        return users.find(user => user.id === id && !user.isDeleted);
     }
 
-    public static createUser(newUser: User): boolean {
-        if (!newUser) {
-            return false;
+    public static createUser(user: User): User {
+        if (!user) {
+            return null;
         }
 
-        users.push({
-            ...newUser,
+        const createdUser = {
+            ...user,
             id: uuidv4(),
-        });
+        };
 
-        return true;
+        users.push(createdUser);
+
+        return createdUser;
     }
 
-    public static updateUser(id: string, updatedProps: User): boolean {
-        if (!id || !updatedProps) {
-            return false;
+    public static updateUser(user: User): User {
+        if (!user) {
+            return null;
         }
+
+        let updatedUser: User;
 
         for (const index in users) {
-            if (users[index].id === id) {
-                users[index] = {
+            if (users[index].id === user.id) {
+                updatedUser = users[index] = {
                     ...users[index],
-                    ...updatedProps,
+                    ...user,
                 };
                 break;
             }
         }
 
-        return true;
+        return updatedUser;
     }
 
-    public static deleteUser(id: string): boolean {
+    public static deleteUser(id: string): User {
         if (!id) {
-            return false;
+            return null;
         }
+
+        let deletedUser: User;
 
         for (const index in users) {
             if (users[index].id === id) {
                 users[index].isDeleted = true;
+                deletedUser = users[index];
                 break;
             }
         }
 
-        return true;
+        return deletedUser;
     }
 }
