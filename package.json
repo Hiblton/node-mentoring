@@ -9,7 +9,8 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/users.sql"
   },
   "lint-staged": {
     "*.ts": [
