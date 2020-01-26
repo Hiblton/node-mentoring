@@ -1,25 +1,38 @@
 import uuidv4 from 'uuid/v4';
-
-import { users, User } from './';
+import { Op } from 'sequelize';
+import { User } from './';
 
 export class UsersService {
-    public static getAutoSuggestUsers(login: string, limit: string): User[] {
-        if (!login || !limit) {
+    public static async getAutoSuggestUsers(loginSubstring: string, limit: string): Promise<User[]> {
+        if (!loginSubstring || !limit) {
             return [];
         }
 
-        return users.filter(user => user.login.includes(login) && !user.isDeleted).slice(0, +limit);
+        return await User.findAll({
+            where: {
+                login: {
+                    [Op.substring]: loginSubstring,
+                },
+                isDeleted: false,
+            },
+            limit: +limit,
+        });
     }
 
-    public static getUserById(id: string): User {
+    public static async getUserById(id: string): Promise<User> {
         if (!id) {
             return null;
         }
 
-        return users.find(user => user.id === id && !user.isDeleted);
+        return await User.findOne({
+            where: {
+                id,
+                isDeleted: false,
+            },
+        });
     }
 
-    public static createUser(user: User): User {
+    public static async createUser(user: User): Promise<User> {
         if (!user) {
             return null;
         }
@@ -29,46 +42,32 @@ export class UsersService {
             id: uuidv4(),
         };
 
-        users.push(createdUser);
-
-        return createdUser;
+        return User.create(createdUser);
     }
 
-    public static updateUser(user: User): User {
+    public static async updateUser(user: User): Promise<User> {
         if (!user) {
             return null;
         }
 
-        let updatedUser: User;
-
-        for (const index in users) {
-            if (users[index].id === user.id) {
-                updatedUser = users[index] = {
-                    ...users[index],
-                    ...user,
-                };
-                break;
-            }
-        }
-
-        return updatedUser;
+        return await User.findOne({
+            where: {
+                id: user.id,
+                isDeleted: false,
+            },
+        }).then(record => record.update(user));
     }
 
-    public static deleteUser(id: string): User {
+    public static async deleteUser(id: string): Promise<User> {
         if (!id) {
             return null;
         }
 
-        let deletedUser: User;
-
-        for (const index in users) {
-            if (users[index].id === id) {
-                users[index].isDeleted = true;
-                deletedUser = users[index];
-                break;
-            }
-        }
-
-        return deletedUser;
+        return await User.findOne({
+            where: {
+                id,
+                isDeleted: false,
+            },
+        }).then(record => record.update({ isDeleted: true }));
     }
 }

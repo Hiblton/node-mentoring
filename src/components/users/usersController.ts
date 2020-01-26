@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { createValidator } from 'express-joi-validation';
 
-import { User, createUserSchema, updateUserSchema, UsersService } from './';
+import { User, UsersService, createUserSchema, updateUserSchema } from './';
 
 export class UsersController {
     public path = '/users';
@@ -20,33 +20,33 @@ export class UsersController {
         this.router.delete(`${this.path}/:id`, this.deleteUser);
     }
 
-    createUser = (request: express.Request, response: express.Response): void => {
+    async createUser(request: express.Request, response: express.Response): Promise<void> {
         const user: User = request.body;
-        const createdUser: User = UsersService.createUser(user);
+        const createdUser: User = await UsersService.createUser(user);
         response.json({ status: !!createdUser, user: createdUser });
-    };
+    }
 
-    getAutoSuggestUsers = (request: express.Request, response: express.Response): void => {
+    async getAutoSuggestUsers(request: express.Request, response: express.Response): Promise<void> {
         const { loginSubstring, limit } = request.query;
-        const users: User[] = UsersService.getAutoSuggestUsers(loginSubstring, limit);
+        const users: User[] = await UsersService.getAutoSuggestUsers(loginSubstring, limit);
         response.json({ users });
-    };
+    }
 
-    getUserById = (request: express.Request, response: express.Response): void => {
+    async getUserById(request: express.Request, response: express.Response): Promise<void> {
         const { id } = request.params;
-        const user: User = UsersService.getUserById(id);
+        const user: User = await UsersService.getUserById(id);
         response.json({ user });
-    };
+    }
 
-    updateUser = (request: express.Request, response: express.Response): void => {
+    async updateUser(request: express.Request, response: express.Response): Promise<void> {
         const user: User = request.body;
-        const updatedUser: User = UsersService.updateUser(user);
+        const updatedUser: User = await UsersService.updateUser(user);
         response.json({ status: !!updatedUser, user: updatedUser });
-    };
+    }
 
-    deleteUser = (request: express.Request, response: express.Response): void => {
+    async deleteUser(request: express.Request, response: express.Response): Promise<void> {
         const { id } = request.params;
-        const deletedUser: User = UsersService.deleteUser(id);
+        const deletedUser: User = await UsersService.deleteUser(id);
         response.json({ status: !!deletedUser, user: deletedUser });
-    };
+    }
 }
