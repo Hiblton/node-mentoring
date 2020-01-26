@@ -1,7 +1,9 @@
 import * as express from 'express';
 import { createValidator } from 'express-joi-validation';
 
-import { User, UsersService, createUserSchema, updateUserSchema } from './';
+import { User } from '../models/user';
+import { UsersService } from '../services/users';
+import { createUserSchema, updateUserSchema } from '../validators/user';
 
 export class UsersController {
     public path = '/users';
@@ -13,17 +15,11 @@ export class UsersController {
     }
 
     public intializeRoutes(): void {
-        this.router.post(this.path, this.validator.body(createUserSchema), this.createUser);
         this.router.get(this.path, this.getAutoSuggestUsers);
         this.router.get(`${this.path}/:id`, this.getUserById);
+        this.router.post(this.path, this.validator.body(createUserSchema), this.createUser);
         this.router.put(this.path, this.validator.body(updateUserSchema), this.updateUser);
         this.router.delete(`${this.path}/:id`, this.deleteUser);
-    }
-
-    async createUser(request: express.Request, response: express.Response): Promise<void> {
-        const user: User = request.body;
-        const createdUser: User = await UsersService.createUser(user);
-        response.json({ status: !!createdUser, user: createdUser });
     }
 
     async getAutoSuggestUsers(request: express.Request, response: express.Response): Promise<void> {
@@ -36,6 +32,12 @@ export class UsersController {
         const { id } = request.params;
         const user: User = await UsersService.getUserById(id);
         response.json({ user });
+    }
+
+    async createUser(request: express.Request, response: express.Response): Promise<void> {
+        const user: User = request.body;
+        const createdUser: User = await UsersService.createUser(user);
+        response.json({ status: !!createdUser, user: createdUser });
     }
 
     async updateUser(request: express.Request, response: express.Response): Promise<void> {

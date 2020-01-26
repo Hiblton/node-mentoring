@@ -1,17 +1,5 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
-
-const sequelize = new Sequelize('postgres://postgres:postgres@127.0.0.1:5432/module3', {
-    dialect: 'postgres',
-});
-
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully!');
-    })
-    .catch(err => {
-        console.log('Unable to connect to the database:', err);
-    });
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from './';
 
 export class User extends Model {
     public id: string;

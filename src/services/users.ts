@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
-import { User } from './';
+import { User } from '../models/user';
 
 export class UsersService {
     public static async getAutoSuggestUsers(loginSubstring: string, limit: string): Promise<User[]> {
@@ -55,7 +55,7 @@ export class UsersService {
                 id: user.id,
                 isDeleted: false,
             },
-        }).then(record => record.update(user));
+        }).then(record => record && record.update(user));
     }
 
     public static async deleteUser(id: string): Promise<User> {
@@ -68,6 +68,6 @@ export class UsersService {
                 id,
                 isDeleted: false,
             },
-        }).then(record => record.update({ isDeleted: true }));
+        }).then(record => record && record.update({ isDeleted: true }));
     }
 }
