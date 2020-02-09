@@ -1,26 +1,32 @@
-# nodejs-module3
+# nodejs-module-4
 
 ## PREREQUISITES:
 
-The task is a continuation of Homework2 and should be done in the same repo(???).
+The task is a continuation of Homework3 and should be done in the same repo.
 
-## TASK 3.1
+## TASK 4.1
 
--   Install DB PostgreSQL on your machine or use a free web hosting services for PostgreSQL (https://www.heroku.com/postgresor https://www.elephantsql.com/plans.html).
--   Write SQL script which will create Users table in the DB and fillit in with predefined users’ collection.
--   Configure your REST service to work with PostgreSQL.
-    -   Use the sequelize package(http://docs.sequelizejs.com/) as ORM to work with PostgreSQL.
-    As an alternative to sequelizeyou can use more low-level query-builder library(http://knexjs.org/).
+Add Group entity to already existing RESTservice with CRUDoperations.
 
-## TASK 3.2
+-   The Group entity should have the following properties(you can use UUIDas Group id).
+-   The service should provide the following CRUD operations for Group:
+    -   get group by id;
+    -   get all groups;
+    -   create and update a group;
+    -   remove group (hard delete–group data is fully removed from the DB).
+-   Storing of groups data should be done in PostgreSQL in Groups table.
+-   The service should follow the principles of 3-layer architecture.
 
-The service should adhere to 3-layer architecture principles (https://softwareontheroad.com/ideal-nodejs-project-structure/) and contain the following set of directories:
-```javascript
-| routers / controllers
-| services
-| data-access
-| models
-```
+## TASK 4.2
+
+Link User records in one table with Group records in another table.
+
+-   Add a UserGroup table(“many-to-many” relationship) which will store the data describing which users are assigned to which group.
+-   If any record gets removed from the DB, then all linked records should be removed from UserGroup as well.
+
+## TASK 4.3
+
+Add `addUsersToGroup(groupId, userIds)` method which will allow adding users to a certain group. Use transactionsto save records in DB.
 
 ## API
 
@@ -41,3 +47,13 @@ interface User {
 |  POST  |   `/users`   |       `user: User`        | `status: boolean, user: User` |              Create user               |
 |  PUT   |   `/users`   |       `user: User`        | `status: boolean, user: User` |              Update user               |
 | DELETE | `/users/:id` |        `id: UUID`         | `status: boolean, user: User` |              Remove user               |
+
+```javascript
+type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
+
+interface Group {
+    id: string;
+    name: string;
+    permissions: Array<Permission>;
+}
+```
