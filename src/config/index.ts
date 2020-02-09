@@ -1,6 +1,8 @@
 import { development } from './development';
 import { production } from './production';
 
+const env = process.env.NODE_ENV || 'development';
+
 export interface Configuration {
     app: {
         port: number;
@@ -13,8 +15,6 @@ export interface Configuration {
         secretPassword?: string;
     };
 }
-
-const env = process.env.NODE_ENV || 'development';
 
 export const config = {
     development,

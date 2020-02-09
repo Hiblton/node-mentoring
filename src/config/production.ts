@@ -1,14 +1,15 @@
 import { Configuration } from './index';
+import { localConfig } from './local';
 
 export const production: Configuration = {
     app: {
-        port: parseInt(process.env.PROD_APP_PORT) || 5000,
+        port: parseInt(process.env.PROD_APP_PORT) || localConfig.app.port,
     },
     db: {
-        host: process.env.PROD_DB_HOST || '127.0.0.1',
-        port: parseInt(process.env.PROD_DB_PORT) || 5432,
-        name: process.env.PROD_DB_NAME || 'module3',
-        secretLogin: process.env.PROD_DB_LOGIN || 'postgres',
-        secretPassword: process.env.PROD_DB_PASSWORD || 'postgres',
+        host: process.env.PROD_DB_HOST || localConfig.db.host,
+        port: parseInt(process.env.PROD_DB_PORT) || localConfig.db.port,
+        name: process.env.PROD_DB_NAME || localConfig.db.name,
+        secretLogin: process.env.PROD_DB_LOGIN || localConfig.db.secretLogin,
+        secretPassword: process.env.PROD_DB_PASSWORD || localConfig.db.secretPassword,
     },
 };

@@ -1,7 +1,9 @@
 import { App } from './app';
-import { UsersController } from './controllers/users';
 import { config } from './config';
 
-const app = new App([new UsersController()], config.app.port);
+import { UsersController } from './controllers/users';
+import { GroupsController } from './controllers/groups';
+
+const app = new App([new UsersController(), new GroupsController()], config.app.port);
 
 app.listen();

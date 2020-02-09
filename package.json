@@ -10,7 +10,7 @@
     "start": "cross-env NODE_ENV=development node --inspect=5858 -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
     "build": "tsc",
-    "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/users.sql"
+    "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/schema.sql"
   },
   "lint-staged": {
     "*.ts": [

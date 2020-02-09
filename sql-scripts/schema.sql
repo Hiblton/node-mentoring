@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS module3;
+DROP DATABASE IF EXISTS node_mentoring;
 
-CREATE DATABASE module3;
+CREATE DATABASE node_mentoring;
 
-\c module3
+\c node_mentoring;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -14,11 +14,22 @@ CREATE TABLE users (
   is_deleted boolean
 );
 
+CREATE TABLE groups (
+  id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+  name TEXT UNIQUE NOT NULL,
+  permissions TEXT ARRAY
+);
+
 INSERT INTO users (login, password, age, is_deleted)
 VALUES ('Will Smith', '12345678', 50, false);
-
 INSERT INTO users (login, password, age, is_deleted)
 VALUES ('Bob Marley', 'qwerty', 80, false);
-
 INSERT INTO users (login, password, age, is_deleted)
 VALUES ('Barak Obama', '11111111', 45, false);
+
+INSERT INTO groups (name, permissions)
+VALUES ('guest', '{READ}');
+INSERT INTO groups (name, permissions)
+VALUES ('user', '{READ, WRITE, SHARE}');
+INSERT INTO groups (name, permissions)
+VALUES ('admin', '{READ, WRITE, DELETE, SHARE, UPLOAD_FILES}');

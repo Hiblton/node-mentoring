@@ -6,7 +6,7 @@ The task is a continuation of Homework3 and should be done in the same repo.
 
 ## TASK 4.1
 
-Add Group entity to already existing RESTservice with CRUDoperations.
+Add Group entity to already existing REST service with CRUD operations.
 
 -   The Group entity should have the following properties(you can use UUIDas Group id).
 -   The service should provide the following CRUD operations for Group:
