@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "cross-env NODE_ENV=development node --inspect=5858 -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
     "build": "tsc",
     "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/users.sql"
@@ -46,7 +46,7 @@
     "@types/sequelize": "^4.28.8",
     "@types/uuid": "^3.4.6",
     "@types/validator": "^12.0.1",
-    "dotenv": "^8.2.0",
+    "cross-env": "^7.0.0",
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.3",
     "pg": "^7.17.1",

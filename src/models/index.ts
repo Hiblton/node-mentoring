@@ -1,9 +1,12 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config();
+import { config } from './../config';
 
-export const sequelize = new Sequelize(process.env.DATABASE_URI, {
-    dialect: 'postgres',
+const dialectDb = 'postgres';
+const databaseURI = `${dialectDb}://${config.db.secretLogin}:${config.db.secretPassword}@${config.db.host}:${config.db.port}/${config.db.name}`;
+
+console.log(databaseURI);
+export const sequelize = new Sequelize(databaseURI, {
+    dialect: dialectDb,
 });
 
 sequelize
