@@ -20,6 +20,11 @@ CREATE TABLE groups (
   permissions TEXT ARRAY
 );
 
+CREATE TABLE user_group (
+  user_id UUID NOT NULL,
+  group_id UUID NOT NULL
+);
+
 INSERT INTO users (login, password, age, is_deleted)
 VALUES ('Will Smith', '12345678', 50, false);
 INSERT INTO users (login, password, age, is_deleted)

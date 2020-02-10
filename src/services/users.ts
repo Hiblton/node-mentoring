@@ -1,6 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
 import { User } from '../models/user';
+import { UserGroup } from '../models/userGroup';
 
 export class UsersService {
     public static async getAutoSuggestUsers(loginSubstring: string, limit: string): Promise<User[]> {
@@ -8,7 +9,7 @@ export class UsersService {
             return [];
         }
 
-        return await User.findAll({
+        return User.findAll({
             where: {
                 login: {
                     [Op.substring]: loginSubstring,
@@ -24,7 +25,7 @@ export class UsersService {
             return null;
         }
 
-        return await User.findOne({
+        return User.findOne({
             where: {
                 id,
                 isDeleted: false,
@@ -50,7 +51,7 @@ export class UsersService {
             return null;
         }
 
-        return await User.findOne({
+        return User.findOne({
             where: {
                 id: user.id,
                 isDeleted: false,
@@ -63,11 +64,16 @@ export class UsersService {
             return null;
         }
 
-        return await User.findOne({
+        return User.findOne({
             where: {
                 id,
                 isDeleted: false,
             },
-        }).then(record => record && record.update({ isDeleted: true }));
+        })
+            .then(record => record && record.update({ isDeleted: true }))
+            .then(record => {
+                UserGroup.destroy({ where: { userId: id } });
+                return record;
+            });
     }
 }

@@ -4,7 +4,6 @@ import { config } from './../config';
 const dialectDb = 'postgres';
 const databaseURI = `${dialectDb}://${config.db.secretLogin}:${config.db.secretPassword}@${config.db.host}:${config.db.port}/${config.db.name}`;
 
-console.log(databaseURI);
 export const sequelize = new Sequelize(databaseURI, {
     dialect: dialectDb,
 });

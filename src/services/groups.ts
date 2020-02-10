@@ -1,10 +1,11 @@
 import uuidv4 from 'uuid/v4';
 
 import { Group } from '../models/group';
+import { UserGroup } from '../models/userGroup';
 
 export class GroupsService {
     public static async getAllGroups(): Promise<Group[]> {
-        return await Group.findAll();
+        return Group.findAll();
     }
 
     public static async getGroupById(id: string): Promise<Group> {
@@ -12,7 +13,7 @@ export class GroupsService {
             return null;
         }
 
-        return await Group.findOne({
+        return Group.findOne({
             where: { id },
         });
     }
@@ -35,7 +36,7 @@ export class GroupsService {
             return null;
         }
 
-        return await Group.findOne({
+        return Group.findOne({
             where: { id: group.id },
         }).then(record => record && record.update(group));
     }
@@ -45,8 +46,12 @@ export class GroupsService {
             return null;
         }
 
-        return await Group.destroy({
+        return Group.destroy({
             where: { id },
-        });
+        }).then(() =>
+            UserGroup.destroy({
+                where: { groupId: id },
+            }),
+        );
     }
 }
