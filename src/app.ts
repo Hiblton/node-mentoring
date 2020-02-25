@@ -28,16 +28,17 @@ export class App {
     }
 
     private initializeLogger(): void {
-        if (process.env.NODE_ENV === 'development') {
-            this.app.use((request: express.Request, response: express.Response, next: Function): void => {
-                this.logger.debug('REQUEST_INTERCEPTER', request.body);
-                this.logger.debug('RESPONSE_INTERCEPTER', response);
+        this.app.use((error: Error, request: express.Request, response: express.Response, next: Function): void => {
+            if (!error) {
                 next();
-            });
-        }
+            }
 
-        process.on('uncaughtException', err => this.logger.error('Uncaught exception:', err));
-        process.on('unhandledRejection', reason => this.logger.error('Unhandled rejection:', reason));
+            response.sendStatus(500);
+            throw new Error(error.stack);
+        });
+
+        process.on('uncaughtException', err => this.logger.error('Uncaught exception', err));
+        process.on('unhandledRejection', reason => this.logger.error('Unhandled rejection', reason));
     }
 
     public listen(): void {

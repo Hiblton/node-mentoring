@@ -11,10 +11,10 @@ export class GroupsController {
     public validator = createValidator();
 
     constructor() {
-        this.intializeRoutes();
+        this.initializeRouters();
     }
 
-    public intializeRoutes(): void {
+    public initializeRouters(): void {
         this.router.get(this.path, this.getAllGroups);
         this.router.get(`${this.path}/:id`, this.getGroupById);
         this.router.post(this.path, this.validator.body(createGroupSchema), this.createGroup);
@@ -23,31 +23,56 @@ export class GroupsController {
     }
 
     async getAllGroups(request: express.Request, response: express.Response): Promise<void> {
-        const groups: Group[] = await GroupsService.getAllGroups();
-        response.json({ groups });
+        try {
+            const groups: Group[] = await GroupsService.getAllGroups();
+            response.json({ groups });
+        } catch (error) {
+            response.status(400).json({ error: true, message: error.message });
+            throw new Error(error);
+        }
     }
 
     async getGroupById(request: express.Request, response: express.Response): Promise<void> {
-        const { id } = request.params;
-        const group: Group = await GroupsService.getGroupById(id);
-        response.json({ group });
+        try {
+            const { id } = request.params;
+            const group: Group = await GroupsService.getGroupById(id);
+            response.json({ group });
+        } catch (error) {
+            response.status(400).json({ error: true, message: error.message });
+            throw new Error(error);
+        }
     }
 
     async createGroup(request: express.Request, response: express.Response): Promise<void> {
-        const group: Group = request.body;
-        const createdGroup: Group = await GroupsService.createGroup(group);
-        response.json({ status: !!createdGroup, group: createdGroup });
+        try {
+            const group: Group = request.body;
+            const createdGroup: Group = await GroupsService.createGroup(group);
+            response.json({ status: !!createdGroup, group: createdGroup });
+        } catch (error) {
+            response.status(400).json({ error: true, message: error.message });
+            throw new Error(error);
+        }
     }
 
     async updateGroup(request: express.Request, response: express.Response): Promise<void> {
-        const group: Group = request.body;
-        const updatedGroup: Group = await GroupsService.updateGroup(group);
-        response.json({ status: !!updatedGroup, group: updatedGroup });
+        try {
+            const group: Group = request.body;
+            const updatedGroup: Group = await GroupsService.updateGroup(group);
+            response.json({ status: !!updatedGroup, group: updatedGroup });
+        } catch (error) {
+            response.status(400).json({ error: true, message: error.message });
+            throw new Error(error);
+        }
     }
 
     async deleteGroup(request: express.Request, response: express.Response): Promise<void> {
-        const { id } = request.params;
-        const countDeletedRows: number = await GroupsService.deleteGroup(id);
-        response.json({ status: !!countDeletedRows });
+        try {
+            const { id } = request.params;
+            const countDeletedRows: number = await GroupsService.deleteGroup(id);
+            response.json({ status: !!countDeletedRows });
+        } catch (error) {
+            response.status(400).json({ error: true, message: error.message });
+            throw new Error(error);
+        }
     }
 }

@@ -29,30 +29,22 @@ export class LoggerService {
     }
 
     // eslint-disable-next-line
-    async info(message: string, obj: any): Promise<void> {
-        this.logger.log('info', message, {
-            obj,
-        });
+    info(message: string, obj: any): void {
+        this.logger.log('info', message, obj);
     }
 
     // eslint-disable-next-line
-    async debug(message: string, obj: any): Promise<void> {
-        this.logger.log('debug', message, {
-            obj,
-        });
+    debug(message: string, obj: any): void {
+        this.logger.log('debug', message, obj);
     }
 
     // eslint-disable-next-line
-    async warn(message: string, obj: any): Promise<void> {
-        this.logger.log('warn', message, {
-            obj,
-        });
+    warn(message: string, obj: any): void {
+        this.logger.log('warn', message, obj);
     }
 
     // eslint-disable-next-line
-    async error(message: string, obj: any): Promise<void> {
-        this.logger.log('error', message, {
-            obj,
-        });
+    error(message: string, obj: any): void {
+        this.logger.log('error', message, obj);
     }
 }
