@@ -1,7 +1,7 @@
 import { development } from './development';
 import { production } from './production';
 
-const env = process.env.NODE_ENV || 'development';
+export const env = process.env.NODE_ENV || 'development';
 
 export interface Configuration {
     app: {
@@ -13,6 +13,11 @@ export interface Configuration {
         name: string;
         secretLogin?: string;
         secretPassword?: string;
+    };
+    logger: {
+        logFilePath: string;
+        maxFileSize?: number;
+        maxFiles?: number;
     };
 }
 

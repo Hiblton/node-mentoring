@@ -11,4 +11,9 @@ export const localConfig: Configuration = {
         secretLogin: 'postgres',
         secretPassword: 'postgres',
     },
+    logger: {
+        logFilePath: 'logs/app.log',
+        maxFileSize: 10 * 1024 * 1024, // 10MB,
+        maxFiles: 5,
+    },
 };

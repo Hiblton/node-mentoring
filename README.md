@@ -1,32 +1,26 @@
-# nodejs-module-4
+# nodejs-module-5
 
 ## PREREQUISITES:
 
-The task is a continuation of Homework3 and should be done in the same repo.
+The task is a continuation of Homework 4 and should be done in the same repo.
 
-## TASK 4.1
+## TASK 5.1
 
-Add Group entity to already existing REST service with CRUD operations.
+-   Add express middlewarewhich will log which service method has been invoked and which arguments have been passed to it.
 
--   The Group entity should have the following properties(you can use UUIDas Group id).
--   The service should provide the following CRUD operations for Group:
-    -   get group by id;
-    -   get all groups;
-    -   create and update a group;
-    -   remove group (hard delete–group data is fully removed from the DB).
--   Storing of groups data should be done in PostgreSQL in Groups table.
--   The service should follow the principles of 3-layer architecture.
+## TASK 5.2
 
-## TASK 4.2
+-   Add express middleware which will log all unhandled errors and return a standard message with HTTP code 500(Internal Server Error).
+    Remark: Do not modify the status code and the message for other errors like validation errors from the previous task.
+-   Add error handling to process.on(‘uncaughtException’, ...).
+-   Add Unhandled promise rejection listener to log errors.
 
-Link User records in one table with Group records in another table.
+## TASK 5.3
 
--   Add a UserGroup table(“many-to-many” relationship) which will store the data describing which users are assigned to which group.
--   If any record gets removed from the DB, then all linked records should be removed from UserGroup as well.
-
-## TASK 4.3
-
-Add `addUsersToGroup(groupId, userIds)` method which will allow adding users to a certain group. Use transactionsto save records in DB.
+-   Every method in the controllers should log the errors which should include the following information:
+    − method name;
+    − arguments which have been passed to the method;
+    − error message.
 
 ## API
 
