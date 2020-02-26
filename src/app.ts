@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { Logger } from './services/logger';
 
@@ -28,13 +28,13 @@ export class App {
     }
 
     private initializeLogger(): void {
-        this.app.use((error: Error, request: express.Request, response: express.Response, next: Function): void => {
+        this.app.use((error: Error, request: Request, response: Response, next: NextFunction): void => {
             if (!error) {
                 next();
             }
 
-            response.sendStatus(500);
-            throw new Error(error.stack);
+            response.sendStatus(response.statusCode || 500);
+            this.logger.error(error.name, error);
         });
 
         process.on('uncaughtException', err => this.logger.error('Uncaught exception', err));

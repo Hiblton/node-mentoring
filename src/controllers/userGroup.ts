@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { UserGroup } from '../models/userGroup';
 import { UserGroupService } from '../services/userGroup';
 
@@ -14,14 +14,14 @@ export class UserGroupController {
         this.router.post(this.path, this.addUsersToGroup);
     }
 
-    async addUsersToGroup(request: express.Request, response: express.Response): Promise<void> {
+    async addUsersToGroup(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const { groupId, usersId } = request.body;
             const result: UserGroup[] = await UserGroupService.addUsersToGroup(groupId, usersId);
             response.json({ result });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 }

@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { createValidator } from 'express-joi-validation';
 
 import { User } from '../models/user';
@@ -22,58 +22,58 @@ export class UsersController {
         this.router.delete(`${this.path}/:id`, this.deleteUser);
     }
 
-    async getAutoSuggestUsers(request: express.Request, response: express.Response): Promise<void> {
+    async getAutoSuggestUsers(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const { loginSubstring, limit } = request.query;
             const users: User[] = await UsersService.getAutoSuggestUsers(loginSubstring, limit);
             response.json({ users });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 
-    async getUserById(request: express.Request, response: express.Response): Promise<void> {
+    async getUserById(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = request.params;
             const user: User = await UsersService.getUserById(id);
             response.json({ user });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 
-    async createUser(request: express.Request, response: express.Response): Promise<void> {
+    async createUser(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const user: User = request.body;
             const createdUser: User = await UsersService.createUser(user);
             response.json({ status: !!createdUser, user: createdUser });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 
-    async updateUser(request: express.Request, response: express.Response): Promise<void> {
+    async updateUser(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const user: User = request.body;
             const updatedUser: User = await UsersService.updateUser(user);
             response.json({ status: !!updatedUser, user: updatedUser });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 
-    async deleteUser(request: express.Request, response: express.Response): Promise<void> {
+    async deleteUser(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = request.params;
             const deletedUser: User = await UsersService.deleteUser(id);
             response.json({ status: !!deletedUser, user: deletedUser });
         } catch (error) {
-            response.status(400).json({ error: true, message: error.message });
-            throw new Error(error);
+            response.statusCode = 400;
+            next(error);
         }
     }
 }
