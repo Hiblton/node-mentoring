@@ -20,8 +20,7 @@ export class UserGroupController {
             const result: UserGroup[] = await UserGroupService.addUsersToGroup(groupId, usersId);
             response.json({ result });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 }

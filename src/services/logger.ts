@@ -3,6 +3,11 @@ import { config } from './../config';
 
 export declare type Logger = WinstonLogger;
 
+export declare interface CustomError {
+    error: Error;
+    errorCode?: number;
+}
+
 const dateFormat = (): string => {
     return new Date(Date.now()).toUTCString();
 };

@@ -28,8 +28,7 @@ export class UsersController {
             const users: User[] = await UsersService.getAutoSuggestUsers(loginSubstring, limit);
             response.json({ users });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -39,8 +38,7 @@ export class UsersController {
             const user: User = await UsersService.getUserById(id);
             response.json({ user });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -50,8 +48,7 @@ export class UsersController {
             const createdUser: User = await UsersService.createUser(user);
             response.json({ status: !!createdUser, user: createdUser });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -61,8 +58,7 @@ export class UsersController {
             const updatedUser: User = await UsersService.updateUser(user);
             response.json({ status: !!updatedUser, user: updatedUser });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -72,8 +68,7 @@ export class UsersController {
             const deletedUser: User = await UsersService.deleteUser(id);
             response.json({ status: !!deletedUser, user: deletedUser });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 }

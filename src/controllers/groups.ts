@@ -27,8 +27,7 @@ export class GroupsController {
             const groups: Group[] = await GroupsService.getAllGroups();
             response.json({ groups });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -38,8 +37,7 @@ export class GroupsController {
             const group: Group = await GroupsService.getGroupById(id);
             response.json({ group });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -49,8 +47,7 @@ export class GroupsController {
             const createdGroup: Group = await GroupsService.createGroup(group);
             response.json({ status: !!createdGroup, group: createdGroup });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -60,8 +57,7 @@ export class GroupsController {
             const updatedGroup: Group = await GroupsService.updateGroup(group);
             response.json({ status: !!updatedGroup, group: updatedGroup });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 
@@ -71,8 +67,7 @@ export class GroupsController {
             const countDeletedRows: number = await GroupsService.deleteGroup(id);
             response.json({ status: !!countDeletedRows });
         } catch (error) {
-            response.statusCode = 400;
-            next(error);
+            next({ error, errorCode: 400 });
         }
     }
 }

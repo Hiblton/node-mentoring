@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { Logger } from './services/logger';
+import { Logger, CustomError } from './services/logger';
 
 export class App {
     public app: express.Application;
@@ -28,16 +28,18 @@ export class App {
     }
 
     private initializeLogger(): void {
-        this.app.use((error: Error, request: Request, response: Response, next: NextFunction): void => {
-            if (!error) {
-                next();
-            }
+        this.app.use(
+            ({ error, errorCode }: CustomError, request: Request, response: Response, next: NextFunction): void => {
+                if (!error) {
+                    next();
+                }
 
-            response.sendStatus(response.statusCode || 500);
-            this.logger.error(error.name, error);
-        });
+                response.sendStatus(errorCode || 500);
+                this.logger.error(error.name, error);
+            },
+        );
 
-        process.on('uncaughtException', err => this.logger.error('Uncaught exception', err));
+        process.on('uncaughtException', error => this.logger.error('Uncaught exception', error));
         process.on('unhandledRejection', reason => this.logger.error('Unhandled rejection', reason));
     }
 
