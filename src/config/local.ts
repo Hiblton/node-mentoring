@@ -16,4 +16,7 @@ export const localConfig: Configuration = {
         maxFileSize: 10 * 1024 * 1024, // 10MB,
         maxFiles: 5,
     },
+    auth: {
+        secret: 'qwerty',
+    },
 };

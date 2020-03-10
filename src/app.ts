@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import { Logger, CustomError } from './services/logger';
 
 export class App {
@@ -19,6 +20,7 @@ export class App {
 
     private initializeMiddlewares(): void {
         this.app.use(bodyParser.json());
+        this.app.use(cors());
     }
 
     private initializeControllers(controllers): void {

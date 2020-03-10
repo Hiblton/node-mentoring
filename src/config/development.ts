@@ -17,4 +17,7 @@ export const development: Configuration = {
         maxFileSize: parseInt(process.env.DEV_LOGGER_MAX_FILE_SIZE) || localConfig.logger.maxFileSize,
         maxFiles: parseInt(process.env.DEV_LOGGER_MAX_FILES) || localConfig.logger.maxFiles,
     },
+    auth: {
+        secret: process.env.DEV_AUTH_SECRET || localConfig.auth.secret,
+    },
 };

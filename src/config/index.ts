@@ -19,6 +19,9 @@ export interface Configuration {
         maxFileSize?: number;
         maxFiles?: number;
     };
+    auth: {
+        secret?: string;
+    };
 }
 
 export const config = {

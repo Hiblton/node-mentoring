@@ -17,4 +17,7 @@ export const production: Configuration = {
         maxFileSize: parseInt(process.env.v_LOGGER_MAX_FILE_SIZE) || localConfig.logger.maxFileSize,
         maxFiles: parseInt(process.env.PROD_LOGGER_MAX_FILES) || localConfig.logger.maxFiles,
     },
+    auth: {
+        secret: process.env.PROD_AUTH_SECRET || localConfig.auth.secret,
+    },
 };

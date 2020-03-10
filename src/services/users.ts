@@ -33,6 +33,20 @@ export class UsersService {
         });
     }
 
+    public static async getUserByLoginAndPassword(login: string, password: string): Promise<User> {
+        if (!login || !password) {
+            return null;
+        }
+
+        return User.findOne({
+            where: {
+                login,
+                password,
+                isDeleted: false,
+            },
+        });
+    }
+
     public static async createUser(user: User): Promise<User> {
         if (!user) {
             return null;

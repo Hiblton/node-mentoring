@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { createValidator } from 'express-joi-validation';
 
+import { AuthorizationService } from '../services/authorization';
 import { User } from '../models/user';
 import { UsersService } from '../services/users';
 import { createUserSchema, updateUserSchema } from '../validators/user';
@@ -11,10 +12,15 @@ export class UsersController {
     public validator = createValidator();
 
     constructor() {
-        this.initializeRoutes();
+        this.initializeMiddleware();
+        this.initializeRouter();
     }
 
-    public initializeRoutes(): void {
+    public initializeMiddleware(): void {
+        this.router.use(AuthorizationService.checkToken);
+    }
+
+    public initializeRouter(): void {
         this.router.get(this.path, this.getAutoSuggestUsers);
         this.router.get(`${this.path}/:id`, this.getUserById);
         this.router.post(this.path, this.validator.body(createUserSchema), this.createUser);

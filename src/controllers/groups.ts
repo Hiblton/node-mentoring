@@ -3,6 +3,7 @@ import { createValidator } from 'express-joi-validation';
 
 import { Group } from '../models/group';
 import { GroupsService } from '../services/groups';
+import { AuthorizationService } from '../services/authorization';
 import { createGroupSchema, updateGroupSchema } from '../validators/group';
 
 export class GroupsController {
@@ -11,10 +12,15 @@ export class GroupsController {
     public validator = createValidator();
 
     constructor() {
-        this.initializeRouters();
+        this.initializeMiddleware();
+        this.initializeRouter();
     }
 
-    public initializeRouters(): void {
+    public initializeMiddleware(): void {
+        this.router.use(AuthorizationService.checkToken);
+    }
+
+    public initializeRouter(): void {
         this.router.get(this.path, this.getAllGroups);
         this.router.get(`${this.path}/:id`, this.getGroupById);
         this.router.post(this.path, this.validator.body(createGroupSchema), this.createGroup);

@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { AuthorizationService } from '../services/authorization';
 import { UserGroup } from '../models/userGroup';
 import { UserGroupService } from '../services/userGroup';
 
@@ -7,10 +8,15 @@ export class UserGroupController {
     public router = express.Router();
 
     constructor() {
-        this.initializeRoutes();
+        this.initializeMiddleware();
+        this.initializeRouter();
     }
 
-    public initializeRoutes(): void {
+    public initializeMiddleware(): void {
+        this.router.use(AuthorizationService.checkToken);
+    }
+
+    public initializeRouter(): void {
         this.router.post(this.path, this.addUsersToGroup);
     }
 
