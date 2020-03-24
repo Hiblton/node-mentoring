@@ -5,12 +5,17 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "pretest": "npm run create_test_db && npm run set_test_env",
+    "posttest": "npm run drop_test_db",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "start": "cross-env NODE_ENV=development node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
     "build": "tsc",
-    "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/schema.sql"
+    "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/schema.sql",
+    "create_test_db": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/create_test_db.sql",
+    "set_test_env": "cross-env TEST_DB_NAME=test_node_mentoring TEST_LOGGER_LOG_FILE_PATH=\"logs\/test.log\"",
+    "drop_test_db": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/drop_test_db.sql"
   },
   "lint-staged": {
     "*.ts": [
@@ -33,8 +38,11 @@
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^3.1.0",
+    "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^25.2.1",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.3"
   },
@@ -43,7 +51,9 @@
     "@types/bluebird": "^3.5.29",
     "@types/express": "^4.17.2",
     "@types/hapi__joi": "^16.0.4",
+    "@types/jest": "^25.1.4",
     "@types/sequelize": "^4.28.8",
+    "@types/supertest": "^2.0.8",
     "@types/uuid": "^3.4.6",
     "@types/validator": "^12.0.1",
     "cors": "^2.8.5",
@@ -69,5 +79,15 @@
     ],
     "exec": "npm run lint && npm start",
     "ext": "ts"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/src/config/"
+    ],
+    "preset": "ts-jest"
   }
 }

@@ -4,7 +4,7 @@ import { config } from './../config';
 import { User } from '../models/user';
 
 export class AuthorizationService {
-    public static signToken(user: User): Promise<User> {
+    public static signToken(user: User): Promise<string> {
         return jwt.sign(user.toJSON(), config.auth.secret, { expiresIn: '1h' });
     }
 
