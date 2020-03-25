@@ -7,48 +7,63 @@ import { LoggerService } from '../services/logger';
 import { AuthorizationService } from '../services/authorization';
 import { UsersService } from '../services/users';
 
-const testUser = {
-    id: 'b0a8eac2-61f6-4886-bc18-09caf8a37249',
-    login: 'Bob Marley',
-    password: 'qwerty',
-    age: 80,
-    isDeleted: false,
-};
+const USER_LOGIN = 'Bob Marley';
+const USER_PASSWORD = 'qwerty';
 
-let token = '';
 let app: App;
+let testUser: User;
+let token: string;
 
 beforeAll(async () => {
-    const user: User = await UsersService.getUserByLoginAndPassword(testUser.login, testUser.password);
-    token = await AuthorizationService.signToken(user);
-
     app = new App([new UsersController()], config.app.port, new LoggerService());
+    testUser = await UsersService.getUserByLoginAndPassword(USER_LOGIN, USER_PASSWORD);
+    token = await AuthorizationService.signToken(testUser);
 });
 
 describe('The UsersController', () => {
-    describe('Get /users/id', () => {
-        it('with missed auth token', done => {
+    describe('Get /users?loginSubstring=&limit=', () => {
+        it('responds 401 Not Authorised with missed auth token', done => {
             return request(app.app)
-                .get(`/users/${testUser.id}`)
+                .get(`/users?loginSubstring=&limit=`)
                 .set('authorization', '')
-                .send({ headers: token })
                 .expect(401, done);
         });
 
-        it('with correct id (guid)', done => {
+        it('responds empty array with empty query params', done => {
             return request(app.app)
-                .get(`/users/${testUser.id}`)
+                .get(`/users?loginSubstring=&limit=`)
                 .set('authorization', token)
-                .send({ headers: token })
-                .expect(200, { user: testUser }, done);
+                .expect(200, { users: [] }, done);
         });
 
-        it('with uncorrect id (guid)', done => {
+        it('responds 200 OK and Users array with set query params', done => {
+            return request(app.app)
+                .get(`/users?loginSubstring=Bob&limit=1`)
+                .set('authorization', token)
+                .expect(200, { users: [testUser.get()] }, done);
+        });
+    });
+
+    describe('Get /users/id', () => {
+        it('responds 401 Not Authorised with missed auth token', done => {
+            return request(app.app)
+                .get(`/users/${testUser.id}`)
+                .set('authorization', '')
+                .expect(401, done);
+        });
+
+        it('responds 400 Bad request with incorrect id (guid)', done => {
             return request(app.app)
                 .get(`/users/${testUser.id}abc`)
                 .set('authorization', token)
-                .send({ headers: token })
                 .expect(400, done);
+        });
+
+        it('responds 200 OK and User object with correct id (guid)', done => {
+            return request(app.app)
+                .get(`/users/${testUser.id}`)
+                .set('authorization', token)
+                .expect(200, { user: testUser.get() }, done);
         });
     });
 });

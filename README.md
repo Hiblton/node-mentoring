@@ -1,20 +1,18 @@
-# nodejs-module-6
+# nodejs-module-next
 
 ## PREREQUISITES:
 
-The task is a continuation of Homework 5 and should be done in the same repo.
+The task is a continuation of Homework 6 and should be done in the same repo.
 
-## TASK 6.1
+## TASK 7.1
 
-Add authorization to the already existing REST service.
--   Add login(username, password) method which should return JWT token.
--   Add a middleware which will proxy all the requests (except login) and check that HTTP Authorization header has the correct value of JWT token.
--   In case of the HTTP Authorization header is absent in the request, the middleware should stop further controller method execution and return HTTP 401 code (Unauthorized Error) and standard error message.
--   In case of HTTP Authorization header has invalid JWT token in the request, the middleware should return HTTP code 403(Forbidden Error) and standard error message.
+-   Add unit tests for User entity controller methods using Jest library (https://jestjs.io/).
+-   Add unit tests for Group entity controller methods using Jest.
 
-## TASK 6.2
+## TASK 7.2
 
-Add CORS middleware to access service methods from WEB applications hosted on another domains (https://github.com/expressjs/cors).
+The information on DB connection (connection string) should be stored in.env file and should be passed to the application using environment variables with the help of dotenv package (https://www.npmjs.com/package/dotenv).
+As an alternative package you can also use config (https://www.npmjs.com/package/config).
 
 ## API
 
