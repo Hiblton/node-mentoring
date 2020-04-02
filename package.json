@@ -5,8 +5,8 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "jest",
-    "pretest": "npm run create_test_db && npm run set_test_env",
+    "test": "cross-env TEST_DB_NAME=test_node_mentoring jest",
+    "pretest": "npm run create_test_db",
     "posttest": "npm run drop_test_db",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
@@ -14,7 +14,6 @@
     "build": "tsc",
     "fixtures": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/schema.sql",
     "create_test_db": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/create_test_db.sql",
-    "set_test_env": "cross-env TEST_DB_NAME=test_node_mentoring TEST_LOGGER_LOG_FILE_PATH=\"logs\/test.log\"",
     "drop_test_db": "psql -h localhost -U postgres -p 5432 -a -q -f ./sql-scripts/drop_test_db.sql"
   },
   "lint-staged": {

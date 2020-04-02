@@ -9,6 +9,14 @@ The task is a continuation of Homework 6 and should be done in the same repo.
 -   Add unit tests for User entity controller methods using Jest library (https://jestjs.io/).
 -   Add unit tests for Group entity controller methods using Jest.
 
+```
+Test Suites: 2 passed, 2 total
+Tests:       37 passed, 37 total
+Snapshots:   0 total
+Time:        7.053s
+Ran all test suites.
+```
+
 ## TASK 7.2
 
 The information on DB connection (connection string) should be stored in.env file and should be passed to the application using environment variables with the help of dotenv package (https://www.npmjs.com/package/dotenv).

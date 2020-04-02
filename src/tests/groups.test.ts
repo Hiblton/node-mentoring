@@ -2,204 +2,197 @@ import request from 'supertest';
 import uuidv4 from 'uuid/v4';
 
 import { Application } from 'express';
-import { UsersController } from '../controllers/users';
-import { User } from '../models/user';
+import { GroupsController } from '../controllers/groups';
 import { TestingService } from '../services/testing';
+import { Group } from '../models/group';
 
 let app: Application;
-let user: User;
+let group: Group;
 let token: string;
 
 beforeAll(async () => {
-    app = TestingService.initApp([new UsersController()]);
-    user = await TestingService.getUser();
+    app = TestingService.initApp([new GroupsController()]);
     token = await TestingService.getToken();
 });
 
-describe('The UsersController', () => {
-    describe('Get /users?loginSubstring=&limit=', () => {
+describe('The GroupsController', () => {
+    describe('Get /groups', () => {
         it('responds 401 Not Authorised if auth token is missed', done => {
             return request(app)
-                .get(`/users?loginSubstring=&limit=`)
+                .get(`/groups`)
                 .set('authorization', '')
                 .expect(401, done);
         });
 
-        it('responds 200 OK and empty array if query params are empty', done => {
+        it('responds 200 OK and Groups array if query params are set', done => {
             return request(app)
-                .get(`/users?loginSubstring=&limit=`)
+                .get(`/groups`)
                 .set('authorization', token)
-                .expect(200, { users: [] }, done);
-        });
-
-        it('responds 200 OK and Users array if query params are set', done => {
-            return request(app)
-                .get(`/users?loginSubstring=Bob&limit=1`)
-                .set('authorization', token)
-                .expect(200, { users: [user.get()] }, done);
+                .expect(response => {
+                    const { groups } = response.body;
+                    expect(groups.length).toBe(3);
+                    group = groups[0];
+                })
+                .expect(200, done);
         });
     });
 
-    describe('Get /users/id', () => {
+    describe('Get /groups/id', () => {
         it('responds 401 Not Authorised if auth token is missed', done => {
             return request(app)
-                .get(`/users/${uuidv4()}`)
+                .get(`/groups/${uuidv4()}`)
                 .set('authorization', '')
                 .expect(401, done);
         });
 
         it('responds 400 Bad request if id (uuid) is incorrect', done => {
             return request(app)
-                .get(`/users/${uuidv4()}abc`)
+                .get(`/groups/${uuidv4()}abc`)
                 .set('authorization', token)
                 .expect(400, done);
         });
 
-        it('responds 200 OK and empty User odject if id (uuid) is not exist', done => {
+        it('responds 200 OK and empty Group odject if id (uuid) is not exist', done => {
             return request(app)
-                .get(`/users/${uuidv4()}`)
+                .get(`/groups/${uuidv4()}`)
                 .set('authorization', token)
-                .expect(200, { user: null }, done);
+                .expect(200, { group: null }, done);
         });
 
-        it('responds 200 OK and User object if id (uuid) is correct', done => {
+        it('responds 200 OK and Group object if id (uuid) is correct', done => {
             return request(app)
-                .get(`/users/${user.id}`)
+                .get(`/groups/${group.id}`)
                 .set('authorization', token)
-                .expect(200, { user: user.get() }, done);
+                .expect(200, { group: group }, done);
         });
     });
 
-    describe('Post /users', () => {
+    describe('Post /groups', () => {
         it('responds 401 Not Authorised if auth token is missed', done => {
             return request(app)
-                .post(`/users`)
+                .post(`/groups`)
                 .set('authorization', '')
                 .expect(401, done);
         });
 
-        it('responds 400 Bad request if body(User object) is empty', done => {
+        it('responds 400 Bad request if body(Group object) is empty', done => {
             return request(app)
-                .post(`/users`)
+                .post(`/groups`)
                 .set('authorization', token)
                 .send({})
                 .expect(400, done);
         });
 
-        it('responds 400 Bad request if body(User object) is invalid', done => {
+        it('responds 400 Bad request if body(Group object) is invalid', done => {
             const invalidRequest = {
-                login: 1234,
-                password: false,
+                name: 1234,
+                permissions: false,
             };
             return request(app)
-                .post(`/users`)
+                .post(`/groups`)
                 .set('authorization', token)
                 .send(invalidRequest)
                 .expect(400, done);
         });
 
-        it('responds 200 OK and User object if body(User object) is valid', done => {
+        it('responds 200 OK and Group object if body(Group object) is valid', done => {
             const body = {
-                login: 'login',
-                password: 'password',
-                age: 18,
-                isDeleted: false,
+                name: 'Test',
+                permissions: ['CREATE'],
             };
             return request(app)
-                .post(`/users`)
+                .post(`/groups`)
                 .set('authorization', token)
                 .send(body)
                 .expect(response => {
-                    const { status, user } = response.body;
-                    delete user.id;
+                    const { status, group } = response.body;
+                    delete group.id;
                     expect(status).toBe(true);
-                    expect(user).toStrictEqual(body);
+                    expect(group).toStrictEqual(body);
                 })
                 .expect(200, done);
         });
     });
 
-    describe('Put /users', () => {
+    describe('Put /groups', () => {
         it('responds 401 Not Authorised if auth token is missed', done => {
             return request(app)
-                .put(`/users`)
+                .put(`/groups`)
                 .set('authorization', '')
                 .expect(401, done);
         });
 
-        it('responds 400 Bad request if body(User object) is empty', done => {
+        it('responds 400 Bad request if body(Group object) is empty', done => {
             return request(app)
-                .put(`/users`)
+                .put(`/groups`)
                 .set('authorization', token)
                 .send({})
                 .expect(400, done);
         });
 
-        it('responds 400 Bad request if body(User object) is invalid', done => {
+        it('responds 400 Bad request if body(Group object) is invalid', done => {
             const invalidRequest = {
-                login: 1234,
-                password: false,
+                name: 1234,
+                permissions: false,
             };
             return request(app)
-                .put(`/users`)
+                .put(`/groups`)
                 .set('authorization', token)
                 .send(invalidRequest)
                 .expect(400, done);
         });
 
-        it('responds 200 OK and User object if body(User object) is valid', done => {
+        it('responds 200 OK and Group object if body(Group object) is valid', done => {
             const body = {
-                ...user.get(),
-                age: 21,
+                ...group,
+                permissions: ['UPDATE'],
             };
             return request(app)
-                .put(`/users`)
+                .put(`/groups`)
                 .set('authorization', token)
                 .send(body)
                 .expect(response => {
-                    const { status, user } = response.body;
+                    const { status, group } = response.body;
                     expect(status).toBe(true);
-                    expect(user).toStrictEqual(body);
+                    expect(group).toStrictEqual(body);
                 })
                 .expect(200, done);
         });
     });
 
-    describe('Delete /users/id', () => {
+    describe('Delete /groups/id', () => {
         it('responds 401 Not Authorised if auth token is missed', done => {
             return request(app)
-                .delete(`/users/${uuidv4()}`)
+                .delete(`/groups/${uuidv4()}`)
                 .set('authorization', '')
                 .expect(401, done);
         });
 
         it('responds 400 Bad request if id (uuid) is incorrect', done => {
             return request(app)
-                .delete(`/users/${uuidv4()}abc`)
+                .delete(`/groups/${uuidv4()}abc`)
                 .set('authorization', token)
                 .expect(400, done);
         });
 
-        it('responds 200 OK and empty User odject if id (uuid) is not exist', done => {
+        it('responds 200 OK and empty Group odject if id (uuid) is not exist', done => {
             return request(app)
-                .delete(`/users/${uuidv4()}`)
+                .delete(`/groups/${uuidv4()}`)
                 .set('authorization', token)
                 .expect(response => {
-                    const { status, user } = response.body;
+                    const { status } = response.body;
                     expect(status).toBe(false);
-                    expect(user).toBe(null);
                 })
                 .expect(200, done);
         });
 
-        it('responds 200 OK and User object if id (uuid) is correct', done => {
+        it('responds 200 OK and Group object if id (uuid) is correct', done => {
             return request(app)
-                .delete(`/users/${user.id}`)
+                .delete(`/groups/${group.id}`)
                 .set('authorization', token)
                 .expect(response => {
-                    const { status, user } = response.body;
-                    expect(status).toBe(true);
-                    expect(user.isDeleted).toBe(true);
+                    const { status } = response.body;
+                    expect(status).toBeDefined();
                 })
                 .expect(200, done);
         });
